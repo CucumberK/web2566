@@ -25,6 +25,7 @@
           if (this.state.s==2) {
             img = <div/>;  // บัตรภาพถูกลบออก ไม่ต้องแสดงภาพ
           }
+          
           return (
             <div className="col-2">
               {img}
@@ -66,15 +67,17 @@
           }
         }
         render() {
-          var sc = <MenuScene app={this}/>  
-          if(this.state.scene==1) sc = <GameScene app={this}/>  
-          if(this.state.scene==2) sc = <WinScene app={this}/>  
-          return <div className="card">
-              <div className="card-header">{this.title} </div>
-              <div className="card-body"> {sc} </div>
-              <div className="card-footer"> {this.footer} </div>
-            </div>
-        }
+  var sc = <MenuScene app={this}/>  
+  if(this.state.scene===1) sc = <GameScene app={this}/>  
+  if(this.state.scene===2) sc = <WinScene app={this}/>  
+  return (
+    <div className="card">
+      <div className="card-header">{this.title} </div>
+      <div className="card-body"> {sc} </div>
+      <div className="card-footer"> {this.footer} </div>
+    </div>
+  );
+}
         start() {
           this.cardsOpened = [];
           this.setState({ scene: 1, cards: this.shuffle(), cardsCount: 36 });
@@ -82,21 +85,24 @@
 
 
     checkCard() {
-          var a = this.cardsOpened[0];
-          var b = this.cardsOpened[1];
-          this.cardsOpened = [];
-          if (a.props.t == b.props.t) {
-            a.setState({ s: 2 });
-            b.setState({ s: 2 });
-            this.setState({ cardsCount: this.state.cardsCount-2 });
-          } else {
-            a.setState({ s: 0 });
-            b.setState({ s: 0 });
-          }
-          if (this.cardsCount == 0) {
-            this.setState({ page: 2 });
-          }
+  var a = this.cardsOpened[0];
+  var b = this.cardsOpened[1];
+  this.cardsOpened = [];
+  if (a.props.t === b.props.t) {
+    a.setState({ s: 2 });
+    b.setState({ s: 2 });
+    this.setState(prevState => ({ cardsCount: prevState.cardsCount - 2 }), () => {
+      if (this.state.cardsCount === 0) {
+        this.setState({ scene: 2 });
       }
+    });
+  } else {
+    a.setState({ s: 0 });
+    b.setState({ s: 0 });
+  }
+}
+
+
 
 
         shuffle() {
